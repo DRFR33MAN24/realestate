@@ -26,7 +26,7 @@
     </intent>
 </queries>
    <application
-        android:label="realestate"
+        android:label="إرتقاء"
         android:requestLegacyExternalStorage="true"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher"
@@ -36,7 +36,7 @@
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyAMcy5nQ7GQJDsHjo3CGXY5RstaVUNe-f4" />
+            android:value="AIzaSyBj2Y6BiGgEeUqanksaN37S8N1-n-kT_gk" />
 
        <meta-data
            android:name="com.google.android.gms.ads.APPLICATION_ID"

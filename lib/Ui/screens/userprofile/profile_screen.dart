@@ -157,7 +157,8 @@ class _ProfileScreenState extends State<ProfileScreen>
                             children: <Widget>[
                               SizedBox(
                                 width: context.screenWidth * 0.35,
-                                child: Text(username)
+                                child: Text(UiUtils.getTranslatedLabel(
+                                        context, username))
                                     .color(context.color.textColorDark)
                                     .size(context.font.large)
                                     .bold(weight: FontWeight.w700)
@@ -165,7 +166,8 @@ class _ProfileScreenState extends State<ProfileScreen>
                               ),
                               SizedBox(
                                 width: context.screenWidth * 0.35,
-                                child: Text(email)
+                                child: Text(UiUtils.getTranslatedLabel(
+                                        context, email))
                                     .color(context.color.textColorDark)
                                     .size(context.font.small)
                                     .setMaxLines(lines: 1),
@@ -193,7 +195,8 @@ class _ProfileScreenState extends State<ProfileScreen>
                                     arguments: {"popToCurrent": true},
                                   );
                                 },
-                                child: const Text("Login"),
+                                child: Text(UiUtils.getTranslatedLabel(
+                                    context, "Login")),
                               );
                             }
 

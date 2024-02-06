@@ -28,7 +28,7 @@ class LanguageCubit extends Cubit<LanguageState> {
     if (language != null) {
       emit(LanguageLoader(language['code']));
     } else {
-      emit(LanguageLoader("en"));
+      emit(LanguageLoader("ar"));
     }
   }
 

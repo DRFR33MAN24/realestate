@@ -7,7 +7,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 /// For theme colors go to [lib/Ui/Theme/theme.dart]
 class AppSettings {
   ///Basic Settings
-  static const String applicationName = 'realestate';
+  static const String applicationName = 'إرتقاء';
   static const String androidPackageName = 'com.watanplatform.wrteam';
   static const String iOSAppId = '12345678';
   static const String playstoreURLAndroid =
@@ -16,7 +16,7 @@ class AppSettings {
   static const String shareAppText = "Share this App";
 
   ///API Setting
-  static const String hostUrl = "https://watan-store.com";
+  static const String hostUrl = "https://irtekaa.com";
 
   static const int apiDataLoadLimit = 20;
   static const int maxCategoryShowLengthInHomeScreen = 5;
@@ -43,7 +43,7 @@ it will call API in background without showing the process and when data availab
   static const int otpTimeOutSecond = 60 * 2;
 
   ///This code will show on login screen [Note: don't add  + symbol]
-  static const String defaultCountryCode = "91";
+  static const String defaultCountryCode = "90";
   static const bool disableCountrySelection =
       false; /* Default [False], this will hide
  Country number choose option in login screen. if your App is for only one country this might be helpful*/

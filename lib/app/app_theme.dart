@@ -11,7 +11,7 @@ final appThemeData = {
     // scaffoldBackgroundColor: pageBackgroundColor,
     brightness: Brightness.light,
     //textTheme
-    fontFamily: "Manrope",
+    fontFamily: "Tajawal",
     textSelectionTheme: const TextSelectionThemeData(
       selectionColor: Colors.green,
       cursorColor: Colors.green,
@@ -33,7 +33,7 @@ final appThemeData = {
   AppTheme.dark: ThemeData(
     brightness: Brightness.dark,
     useMaterial3: false,
-    fontFamily: "Manrope",
+    fontFamily: "Tajawal",
     errorColor: errorMessageColor.withOpacity(0.7),
     textSelectionTheme:
         const TextSelectionThemeData(selectionHandleColor: tertiaryColorDark),
