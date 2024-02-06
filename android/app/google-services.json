@@ -1,0 +1,62 @@
+{
+  "project_info": {
+    "project_number": "857724650770",
+    "project_id": "realestate-8b757",
+    "storage_bucket": "realestate-8b757.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:857724650770:android:f891914638499343fd1fcb",
+        "android_client_info": {
+          "package_name": "com.watanplatform.wrteam"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "857724650770-g09cfkd9qg73f2s3ne34cl153opomv5i.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.watanplatform.wrteam",
+            "certificate_hash": "0daa93eee3cff8068482556958edd0e000ddd9b2"
+          }
+        },
+        {
+          "client_id": "857724650770-i65mmu8p0suinmk10r4prmock83gu9ks.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.watanplatform.wrteam",
+            "certificate_hash": "e091f7ed24cb1a8e4b63be586e189495e18001cd"
+          }
+        },
+        {
+          "client_id": "857724650770-i0o0j0bv38856pbadme5j9a749qvvp0k.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBj2Y6BiGgEeUqanksaN37S8N1-n-kT_gk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "857724650770-i0o0j0bv38856pbadme5j9a749qvvp0k.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "857724650770-0hposqks2d0sj9fadfstf4210lafuqji.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.ebroker.wrteam"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
