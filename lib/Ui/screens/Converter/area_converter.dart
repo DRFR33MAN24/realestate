@@ -66,13 +66,14 @@ class _AreaCalculatorState extends State<AreaCalculator> {
                 SizedBox(
                   height: 15.rh(context),
                 ),
-                Text("${UiUtils.getTranslatedLabel(context, "convert")} ${_placeSpaceBeforeCapital(_from.value)} to  ${_placeSpaceBeforeCapital(_to.value)}")
+                Text("${UiUtils.getTranslatedLabel(context, "convert")} ${UiUtils.getTranslatedLabel(context, _from.value)} ${UiUtils.getTranslatedLabel(context, "to")}  ${UiUtils.getTranslatedLabel(context, _to.value)}")
                     .size(context.font.large)
                     .color(context.color.textColorDark),
                 SizedBox(
                   height: 3.rh(context),
                 ),
-                const Text("Enter the value and select desired unit")
+                Text("Enter the value and select desired unit"
+                        .translate(context))
                     .size(context.font.small)
                     .color(context.color.textLightColor),
                 SizedBox(
@@ -85,7 +86,7 @@ class _AreaCalculatorState extends State<AreaCalculator> {
                         context,
                         controller: _fromTextController,
                         value: value,
-                        hint: "from",
+                        hint: UiUtils.getTranslatedLabel(context, "from"),
                         valueListanable: _from,
                       );
                     }),
@@ -100,7 +101,7 @@ class _AreaCalculatorState extends State<AreaCalculator> {
                         controller: _toTextController,
                         isReadOnly: true,
                         value: value,
-                        hint: "to",
+                        hint: UiUtils.getTranslatedLabel(context, "to"),
                         valueListanable: _to,
                       );
                     }),
@@ -128,7 +129,7 @@ class _AreaCalculatorState extends State<AreaCalculator> {
                   _toTextController.text = convert.toString();
 
                   _resultController.text =
-                      "${_fromTextController.text} ${_placeSpaceBeforeCapital(_from.value)} = $convert ${_placeSpaceBeforeCapital(_to.value)}";
+                      "${_fromTextController.text} ${UiUtils.getTranslatedLabel(context, _from.value)} = $convert ${UiUtils.getTranslatedLabel(context, _to.value)}";
                 }, buttonTitle: UiUtils.getTranslatedLabel(context, "convert"))
               ],
             ),
@@ -199,7 +200,7 @@ class _AreaCalculatorState extends State<AreaCalculator> {
             items: List.generate(values.length, (index) {
               return DropdownMenuItem(
                 value: values[index],
-                child: Text(_placeSpaceBeforeCapital(values[index])),
+                child: Text((values[index]).translate(context)),
               );
             }),
             onChanged: (value) {

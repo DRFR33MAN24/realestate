@@ -47,7 +47,8 @@ class _ReportPropertyScreenState extends State<ReportPropertyScreen> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text("Report property").size(context.font.larger),
+            Text("Report property".translate(context))
+                .size(context.font.larger),
             SizedBox(
               height: 15,
             ),

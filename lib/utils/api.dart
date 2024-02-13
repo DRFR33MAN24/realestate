@@ -164,6 +164,7 @@ class Api {
   static String minPrice = "min_price";
   static String postedSince = "posted_since";
   static String property = "property";
+  static String owner_email = "owner_email";
   static String offset = "offset";
   static String topRated = "top_rated";
   static String promoted = "promoted";
@@ -246,6 +247,9 @@ class Api {
     } on DioError catch (e) {
       if (e.response?.statusCode == 401) {
         throw "auth-expired";
+      }
+      if (e.response?.statusCode == 402) {
+        throw "banned";
       }
 
       if (e.response?.statusCode == 503) {

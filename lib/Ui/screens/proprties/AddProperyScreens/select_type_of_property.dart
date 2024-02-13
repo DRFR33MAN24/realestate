@@ -74,11 +74,11 @@ class _SelectPropertyTypeState extends State<SelectPropertyType> {
                         });
                       },
                       onAccept: () async {
+                        Navigator.pop(context);
                         _openSubscriptionScreen();
                         setState(() {
                           isDialogeShown = true;
                         });
-                        // Navigator.pop(context, "1");
                       },
                     ));
               });

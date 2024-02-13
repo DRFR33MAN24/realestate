@@ -5,6 +5,7 @@ import 'dart:developer';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:ebroker/Ui/screens/widgets/Erros/no_internet.dart';
+
 import 'package:ebroker/app/default_app_setting.dart';
 import 'package:ebroker/app/routes.dart';
 // import 'package:flutter/services.dart';
@@ -29,6 +30,7 @@ import 'package:permission_handler/permission_handler.dart';
 
 import '../../app/app.dart';
 import '../../app/app_theme.dart';
+import '../../data/cubits/Report/fetch_property_report_reason_list.dart';
 import '../../data/cubits/auth/auth_state_cubit.dart';
 import '../../data/cubits/category/fetch_category_cubit.dart';
 import '../../data/cubits/outdoorfacility/fetch_outdoor_facility_list.dart';
@@ -37,6 +39,8 @@ import '../../data/cubits/system/app_theme_cubit.dart';
 import '../../utils/constant.dart';
 import '../../utils/hive_keys.dart';
 import '../../utils/hive_utils.dart';
+
+import 'widgets/blurred_dialoge_box.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -223,67 +227,63 @@ class SplashScreenState extends State<SplashScreen>
       overlays: SystemUiOverlay.values,
     );
     // log("SYSTM SETTING STATUS '${appSettings.splashLogo!}'");
-
     navigateCheck();
-
     return BlocListener<FetchLanguageCubit, FetchLanguageState>(
-      listener: (context, state) {},
-      child: BlocListener<FetchSystemSettingsCubit, FetchSystemSettingsState>(
-        listener: (context, state) {
-          if (state is FetchSystemSettingsFailure) {
-            log("SYSTEM SETTING FAILUR IS ${state.errorMessage}");
-          }
-          if (state is FetchSystemSettingsSuccess) {
-            var setting = context
-                .read<FetchSystemSettingsCubit>()
-                .getSetting(SystemSetting.subscription);
-            if ((setting as List).isNotEmpty) {
-              if ((setting[0] as Map).containsKey("package_id")) {
-                Constant.subscriptionPackageId =
-                    setting[0]['package_id'].toString();
-                context.read<GetSubsctiptionPackageLimitsCubit>().getLimits(
-                      setting[0]['package_id'].toString(),
-                    );
+        listener: (context, state) {},
+        child: BlocListener<FetchSystemSettingsCubit, FetchSystemSettingsState>(
+            listener: (context, state) {
+              if (state is FetchSystemSettingsFailure) {
+                log("SYSTEM SETTING FAILUR IS ${state.errorMessage}");
               }
-            }
+              if (state is FetchSystemSettingsSuccess) {
+                var setting = context
+                    .read<FetchSystemSettingsCubit>()
+                    .getSetting(SystemSetting.subscription);
+                if ((setting as List).isNotEmpty) {
+                  if ((setting[0] as Map).containsKey("package_id")) {
+                    Constant.subscriptionPackageId =
+                        setting[0]['package_id'].toString();
+                    context.read<GetSubsctiptionPackageLimitsCubit>().getLimits(
+                          setting[0]['package_id'].toString(),
+                        );
+                  }
+                }
 
-            if (state.settings['data'].containsKey("demo_mode")) {
-              Constant.isDemoModeOn = state.settings['data']['demo_mode'];
-            }
-            isSettingsLoaded = true;
-            setState(() {});
-          }
-        },
-        child: AnnotatedRegion(
-          value: SystemUiOverlayStyle(
-            statusBarColor: context.color.tertiaryColor,
-          ),
-          child: Scaffold(
-            backgroundColor: context.color.tertiaryColor,
-            body: Stack(
-              children: [
-                Align(
-                  alignment: Alignment.center,
-                  child: SizedBox(
-                      width: 150,
-                      height: 150,
-                      child: LoadAppSettings().svg(
-                        appSettings.splashLogo!,
-                        // color: context.color.secondaryColor,
-                      )),
+                if (state.settings['data'].containsKey("demo_mode")) {
+                  Constant.isDemoModeOn = state.settings['data']['demo_mode'];
+                }
+                isSettingsLoaded = true;
+                setState(() {});
+              }
+            },
+            child: AnnotatedRegion(
+              value: SystemUiOverlayStyle(
+                statusBarColor: context.color.tertiaryColor,
+              ),
+              child: Scaffold(
+                backgroundColor: context.color.tertiaryColor,
+                body: Stack(
+                  children: [
+                    Align(
+                      alignment: Alignment.center,
+                      child: SizedBox(
+                          width: 150,
+                          height: 150,
+                          child: LoadAppSettings().svg(
+                            appSettings.splashLogo!,
+                            // color: context.color.secondaryColor,
+                          )),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 16.0),
+                      child: Align(
+                          alignment: Alignment.bottomCenter,
+                          key: const ValueKey("companylogo"),
+                          child: UiUtils.getSvg(AppIcons.companyLogo)),
+                    )
+                  ],
                 ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 16.0),
-                  child: Align(
-                      alignment: Alignment.bottomCenter,
-                      key: const ValueKey("companylogo"),
-                      child: UiUtils.getSvg(AppIcons.companyLogo)),
-                )
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
+              ),
+            )));
   }
 }

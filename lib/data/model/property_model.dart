@@ -14,6 +14,8 @@ class PropertyModel {
       {this.id,
       this.title,
       this.customerName,
+      this.customerId,
+      this.customerVerified,
       this.customerEmail,
       this.customerNumber,
       this.customerProfile,
@@ -61,6 +63,8 @@ class PropertyModel {
   final String? title;
   final String? price;
   final String? customerName;
+  final int? customerId;
+  final int? customerVerified;
   final String? customerEmail;
   final String? customerProfile;
   final String? customerNumber;
@@ -205,6 +209,8 @@ class PropertyModel {
         customerProfile: rawjson['profile'],
         customerNumber: rawjson['mobile'],
         customerName: rawjson['customer_name'],
+        customerId: rawjson['customer_id'],
+        customerVerified: rawjson['customer_verified'],
         video: rawjson['video_link'],
         threeDImage: rawjson['threeD_image'],
         latitude: rawjson['latitude'].toString(),
@@ -271,6 +277,8 @@ class PropertyModel {
         "mobile": customerNumber,
         "email": customerEmail,
         "customer_name": customerName,
+        "customer_id": customerId,
+        "customer_verified": customerVerified,
         "profile": customerProfile,
         "threeD_image": threeDImage,
         "title": title,

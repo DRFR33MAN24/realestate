@@ -116,19 +116,23 @@ class _PropertyMapScreenState extends State<PropertyMapScreen> {
   );
 
   Future<void> loadDefaultCity() async {
-    if (HiveUtils.getCityName() == null) return;
-    List<MapPoint> pointList =
-        await GMap.getNearByProperty(HiveUtils.getCityName() ?? "");
+    List<MapPoint> pointList;
+    if (HiveUtils.getCityName() == null) {
+      pointList = await GMap.getNearByProperty("all");
+      print("dbg loadDefaultCity ${pointList}");
+    } else {
+      pointList = await GMap.getNearByProperty(HiveUtils.getCityName() ?? "");
+    }
 
     if (pointList.isEmpty) {
       marker = {};
       setState(() {});
     }
 
-    LatLng? latLng = await getCityLatLong(HiveUtils.getCityPlaceId());
-    //Animate camera to location
-    (await completer.future).animateCamera(CameraUpdate.newCameraPosition(
-        CameraPosition(target: latLng, zoom: 7)));
+    // LatLng? latLng = await getCityLatLong(HiveUtils.getCityPlaceId());
+    // //Animate camera to location
+    // (await completer.future).animateCamera(CameraUpdate.newCameraPosition(
+    //     CameraPosition(target: latLng, zoom: 7)));
     loopMarker(pointList);
   }
 

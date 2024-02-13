@@ -10,6 +10,7 @@ class UserModel {
   String? firebaseId;
   int? id;
   int? isActive;
+  int? isVerified;
   bool? isProfileCompleted;
   String? logintype;
   String? mobile;
@@ -28,6 +29,7 @@ class UserModel {
       this.firebaseId,
       this.id,
       this.isActive,
+      this.isVerified,
       this.isProfileCompleted,
       this.logintype,
       this.mobile,
@@ -46,6 +48,7 @@ class UserModel {
     firebaseId = json['firebase_id'];
     id = json['id'];
     isActive = Adapter.forceInt(json['isActive']);
+    isVerified = Adapter.forceInt(json['isVerified']);
     isProfileCompleted = json['isProfileCompleted'];
     logintype = json['logintype'];
     mobile = json['mobile'];
@@ -68,6 +71,7 @@ class UserModel {
     data['firebase_id'] = firebaseId;
     data['id'] = id;
     data['isActive'] = isActive;
+    data['isVerified'] = isVerified;
     data['isProfileCompleted'] = isProfileCompleted;
     data['logintype'] = logintype;
     data['mobile'] = mobile;
@@ -81,6 +85,6 @@ class UserModel {
 
   @override
   String toString() {
-    return 'UserModel(address: $address, createdAt: $createdAt, customertotalpost: $customertotalpost, email: $email, fcmId: $fcmId, firebaseId: $firebaseId, id: $id, isActive: $isActive, isProfileCompleted: $isProfileCompleted, logintype: $logintype, mobile: $mobile, name: $name, notification: $notification, profile: $profile, token: $token, updatedAt: $updatedAt)';
+    return 'UserModel(address: $address, createdAt: $createdAt, customertotalpost: $customertotalpost, email: $email, fcmId: $fcmId, firebaseId: $firebaseId, id: $id, isActive: $isActive,isVerified:$isVerified, isProfileCompleted: $isProfileCompleted, logintype: $logintype, mobile: $mobile, name: $name, notification: $notification, profile: $profile, token: $token, updatedAt: $updatedAt)';
   }
 }

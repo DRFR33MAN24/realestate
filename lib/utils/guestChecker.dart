@@ -60,12 +60,13 @@ class GuestChecker {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text("Login is required to access this feature.")
+                Text("Login is required to access this feature."
+                        .translate(context))
                     .size(context.font.larger),
                 const SizedBox(
                   height: 5,
                 ),
-                const Text("Tap on login to authorize")
+                Text("Tap on login to authorize".translate(context))
                     .size(context.font.small),
                 const SizedBox(
                   height: 10,
@@ -78,7 +79,7 @@ class GuestChecker {
                     Navigator.pushNamed(context, Routes.login,
                         arguments: {"popToCurrent": true});
                   },
-                  child: const Text("Login now").color(
+                  child: Text("Login now".translate(context)).color(
                     _context?.color.buttonColor ?? Colors.white,
                   ),
                 )

@@ -302,7 +302,7 @@ class LoginScreenState extends State<LoginScreen> {
                           },
                         );
                       },
-                      child: const Text("Skip"),
+                      child: Text("Skip".translate(context)),
                     ),
                   );
                 }),

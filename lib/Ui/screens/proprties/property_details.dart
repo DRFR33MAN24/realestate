@@ -54,6 +54,7 @@ import '../../../utils/guestChecker.dart';
 import '../../../utils/helper_utils.dart';
 import '../../../utils/ui_utils.dart';
 import '../analytics/analytics_screen.dart';
+import '../userprofile/owner_profile.dart';
 import '../widgets/AnimatedRoutes/blur_page_route.dart';
 import '../widgets/all_gallary_image.dart';
 import '../widgets/video_view_screen.dart';
@@ -326,8 +327,7 @@ class PropertyDetailsState extends State<PropertyDetails>
         .formatAmount(prefix: true));
 
     if (property?.rentduration != "" && property?.rentduration != null) {
-      rentPrice =
-          ("$rentPrice / ") + (rentDurationMap[property!.rentduration] ?? "");
+      rentPrice = ("$rentPrice");
     }
 
     return SafeArea(
@@ -743,7 +743,15 @@ class PropertyDetailsState extends State<PropertyDetails>
                                             .size(18)
                                             .bold(weight: FontWeight.w500),
                                       ]
-                                    ]
+                                    ],
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Text(
+                                              "${property!.rentduration!.translate(context)}")
+                                          .color(context.color.tertiaryColor)
+                                          .size(18)
+                                          .bold(weight: FontWeight.w500),
+                                    ),
                                   ],
                                 ),
                                 const SizedBox(
@@ -943,11 +951,20 @@ class PropertyDetailsState extends State<PropertyDetails>
                                     .color(context.color.textColorDark)
                                     .size(16)
                                     .bold(weight: FontWeight.w600),
+
                                 const SizedBox(
                                   height: 14,
                                 ),
                                 GestureDetector(
-                                  onTap: () {},
+                                  onTap: () {
+                                    Navigator.push(context, MaterialPageRoute(
+                                      builder: (context) {
+                                        return OwnerProfileScreen(
+                                          propertyModel: property!,
+                                        );
+                                      },
+                                    ));
+                                  },
                                   child: CusomterProfileWidget(
                                     widget: widget,
                                   ),
@@ -1883,7 +1900,20 @@ class CusomterProfileWidget extends StatelessWidget {
               Text(widget.property?.customerEmail ?? ""),
             ],
           ),
-        )
+        ),
+        UiUtils.buildButton(context,
+            autoWidth: false,
+            width: 10,
+            buttonTitle: UiUtils.getTranslatedLabel(context, "show_profile"),
+            onPressed: () {
+          Navigator.push(context, MaterialPageRoute(
+            builder: (context) {
+              return OwnerProfileScreen(
+                propertyModel: widget.property!,
+              );
+            },
+          ));
+        })
       ],
     );
   }
@@ -1953,7 +1983,7 @@ class OutdoorFacilityListWidget extends StatelessWidget {
                     .color(context.color.textColorDark)
                     .setMaxLines(lines: 2),
                 const SizedBox(height: 2),
-                Text("${facility.distance} KM")
+                Text("${facility.distance} ${UiUtils.getTranslatedLabel(context, "KM")}")
                     .centerAlign()
                     .size(context.font.small)
                     .color(context.color.textLightColor)

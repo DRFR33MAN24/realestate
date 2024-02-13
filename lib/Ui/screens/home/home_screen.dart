@@ -18,12 +18,14 @@ import 'package:ebroker/utils/guestChecker.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import '../../../app/app.dart';
 import '../../../app/routes.dart';
+import '../../../data/cubits/Report/fetch_property_report_reason_list.dart';
 import '../../../data/cubits/category/fetch_category_cubit.dart';
 import '../../../data/cubits/favorite/add_to_favorite_cubit.dart';
 import '../../../data/cubits/favorite/fetch_favorites_cubit.dart';
@@ -53,6 +55,7 @@ import '../main_activity.dart';
 import '../widgets/Erros/no_data_found.dart';
 import '../widgets/Erros/no_internet.dart';
 import '../widgets/Erros/something_went_wrong.dart';
+import '../widgets/blurred_dialoge_box.dart';
 import '../widgets/shimmerLoadingContainer.dart';
 import 'Widgets/city_heading_card.dart';
 import 'Widgets/header_card.dart';
@@ -83,6 +86,7 @@ class HomeScreenState extends State<HomeScreen>
 
   @override
   void initState() {
+    context.read<FetchPropertyReportReasonsListCubit>().fetch();
     DeepLinkManager.initDeepLinks(context);
     initializeSettings();
     addPageScrollListener();
@@ -220,184 +224,241 @@ class HomeScreenState extends State<HomeScreen>
         onRefresh: () async {
           _onRefresh();
         },
-        child: Scaffold(
-          appBar: AppBar(
-            elevation: 0,
-            leadingWidth:
-                HiveUtils.getCityName() != null ? 200.rw(context) : 130,
-            leading: Padding(
-              padding: EdgeInsetsDirectional.only(
-                start: sidePadding.rw(context),
-              ),
-              child: HiveUtils.getCityName() != null
-                  ? const LocationWidget()
-                  : SizedBox(
-                      child: LoadAppSettings().svg(appSettings.appHomeScreen!),
+        child: BlocListener<FetchPropertyReportReasonsListCubit,
+                FetchPropertyReportReasonsListState>(
+            listener: (context, s) {
+              if (s is FetchPropertyReportReasonsFailure) {
+                print('dbg failure ${s.error}');
+                if (s.error.toString().contains('402')) {
+                  UiUtils.showBlurredDialoge(
+                    context,
+                    dialoge: BlurredDialogBox(
+                      backAllowedButton: false,
+                      showCancleButton: false,
+                      acceptButtonColor: context.color.error,
+                      acceptTextColor: Colors.white,
+                      onAccept: () async {
+                        SystemNavigator.pop();
+                      },
+                      title:
+                          UiUtils.getTranslatedLabel(context, "accountBanned"),
+                      content: StatefulBuilder(builder: (context, update) {
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                const SizedBox(
+                                  width: 5,
+                                ),
+                                Text(UiUtils.getTranslatedLabel(
+                                    context, "accountBannedDetails"))
+                              ],
+                            ),
+                          ],
+                        );
+                      }),
+                      barrierDismissable: false,
                     ),
-            ),
-            backgroundColor: const Color.fromARGB(0, 0, 0, 0),
-            actions: [
-              GuestChecker.updateUI(
-                onChangeStatus: (isGuest) {
-                  Widget buildDefaultPersonSVG(BuildContext context) {
-                    return Container(
-                      width: 90,
-                      height: 90,
-                      decoration: BoxDecoration(
-                          color: context.color.tertiaryColor.withOpacity(0.1),
-                          shape: BoxShape.circle),
-                      child: Center(
-                        child: UiUtils.getSvg(
-                          AppIcons.defaultPersonLogo,
-                          color: context.color.tertiaryColor,
-                          // fit: BoxFit.none,
-                          width: 30,
-                          height: 30,
+                  );
+                }
+              }
+            },
+            child: Scaffold(
+              appBar: AppBar(
+                elevation: 0,
+                leadingWidth:
+                    HiveUtils.getCityName() != null ? 200.rw(context) : 130,
+                leading: Padding(
+                  padding: EdgeInsetsDirectional.only(
+                    start: sidePadding.rw(context),
+                  ),
+                  child: HiveUtils.getCityName() != null
+                      ? const LocationWidget()
+                      : SizedBox(
+                          child:
+                              LoadAppSettings().svg(appSettings.appHomeScreen!),
                         ),
+                ),
+                backgroundColor: const Color.fromARGB(0, 0, 0, 0),
+                actions: [
+                  GuestChecker.updateUI(
+                    onChangeStatus: (isGuest) {
+                      Widget buildDefaultPersonSVG(BuildContext context) {
+                        return Container(
+                          width: 90,
+                          height: 90,
+                          decoration: BoxDecoration(
+                              color:
+                                  context.color.tertiaryColor.withOpacity(0.1),
+                              shape: BoxShape.circle),
+                          child: Center(
+                            child: UiUtils.getSvg(
+                              AppIcons.defaultPersonLogo,
+                              color: context.color.tertiaryColor,
+                              // fit: BoxFit.none,
+                              width: 30,
+                              height: 30,
+                            ),
+                          ),
+                        );
+                      }
+
+                      if (isGuest == null) {
+                        return buildDefaultPersonSVG(context);
+                      } else if (isGuest == true) {
+                        return buildDefaultPersonSVG(context);
+                      } else {
+                        return const CircularProfileImageWidget();
+                      }
+                    },
+                  )
+                ],
+              ),
+              backgroundColor: context.color.primaryColor,
+              body: Builder(builder: (context) {
+                if (homeScreenState.state == HomeScreenDataState.fail) {
+                  return const SomethingWentWrong();
+                }
+
+                return BlocConsumer<FetchSystemSettingsCubit,
+                    FetchSystemSettingsState>(
+                  listener: (context, state) {
+                    if (state is FetchCategoryInProgress) {
+                      homeStateListener.setNetworkState(setState, true);
+                      setState(() {});
+                    }
+                    if (state is FetchSystemSettingsSuccess) {
+                      homeStateListener.setNetworkState(setState, true);
+
+                      setState(() {});
+                      var setting = context
+                          .read<FetchSystemSettingsCubit>()
+                          .getSetting(SystemSetting.subscription);
+                      if (setting.length != 0) {
+                        String packageId = setting[0]['package_id'].toString();
+                        Constant.subscriptionPackageId = packageId;
+                      }
+                    }
+                  },
+                  builder: (context, state) {
+                    if (homeScreenState.state == HomeScreenDataState.success) {
+                    } else if (homeScreenState.state ==
+                        HomeScreenDataState.nointernet) {
+                      return NoInternet(
+                        onRetry: () {
+                          context.read<SliderCubit>().fetchSlider(context);
+                          context.read<FetchCategoryCubit>().fetchCategories();
+                          context
+                              .read<FetchMostViewedPropertiesCubit>()
+                              .fetch();
+                          context.read<FetchPromotedPropertiesCubit>().fetch();
+                          context
+                              .read<FetchHomePropertiesCubit>()
+                              .fetchProperty();
+                        },
+                      );
+                    }
+
+                    if (homeScreenState.state == HomeScreenDataState.nodata) {
+                      return Center(
+                        child: NoDataFound(
+                          onTap: () {
+                            context.read<SliderCubit>().fetchSlider(context);
+                            context
+                                .read<FetchCategoryCubit>()
+                                .fetchCategories();
+
+                            context
+                                .read<FetchMostViewedPropertiesCubit>()
+                                .fetch();
+                            context
+                                .read<FetchPromotedPropertiesCubit>()
+                                .fetch();
+                            context
+                                .read<FetchHomePropertiesCubit>()
+                                .fetchProperty();
+                          },
+                        ),
+                      );
+                    }
+
+                    return SingleChildScrollView(
+                      controller: homeScreenController,
+                      physics: const BouncingScrollPhysics(),
+                      padding: EdgeInsets.symmetric(
+                        vertical: MediaQuery.of(context).padding.top,
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          ///Looping through sections so arrange it
+                          ...List.generate(
+                            AppSettings.sections.length,
+                            (index) {
+                              HomeScreenSections section =
+                                  AppSettings.sections[index];
+                              if (section == HomeScreenSections.Search) {
+                                return const HomeSearchField();
+                              } else if (section == HomeScreenSections.Slider) {
+                                return sliderWidget();
+                              } else if (section ==
+                                  HomeScreenSections.Category) {
+                                return categoryWidget();
+                              } else if (section ==
+                                  HomeScreenSections.NearbyProperties) {
+                                return buildNearByProperties();
+                              } else if (section ==
+                                  HomeScreenSections.FeaturedProperties) {
+                                return featuredProperties(
+                                    homeScreenState, context);
+                              } else if (section ==
+                                  HomeScreenSections.PersonalizedFeed) {
+                                return const PersonalizedPropertyWidget();
+                              } else if (section ==
+                                  HomeScreenSections.RecentlyAdded) {
+                                return const RecentPropertiesSectionWidget();
+                              } else if (section ==
+                                  HomeScreenSections.MostLikedProperties) {
+                                return mostLikedProperties(
+                                    homeScreenState, context);
+                              } else if (section ==
+                                  HomeScreenSections.MostViewed) {
+                                return mostViewedProperties(
+                                    homeScreenState, context);
+                              } else if (section ==
+                                  HomeScreenSections.PopularCities) {
+                                return Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 10,
+                                  ),
+                                  child: Column(
+                                    children: [
+                                      const BannerAdWidget(),
+                                      const SizedBox(
+                                        height: 10,
+                                      ),
+                                      popularCityProperties(),
+                                    ],
+                                  ),
+                                );
+                              } else {
+                                return const SizedBox.shrink();
+                              }
+                            },
+                          ),
+                          const SizedBox(
+                            height: 30,
+                          ),
+                        ],
                       ),
                     );
-                  }
-
-                  if (isGuest == null) {
-                    return buildDefaultPersonSVG(context);
-                  } else if (isGuest == true) {
-                    return buildDefaultPersonSVG(context);
-                  } else {
-                    return const CircularProfileImageWidget();
-                  }
-                },
-              )
-            ],
-          ),
-          backgroundColor: context.color.primaryColor,
-          body: Builder(builder: (context) {
-            if (homeScreenState.state == HomeScreenDataState.fail) {
-              return const SomethingWentWrong();
-            }
-
-            return BlocConsumer<FetchSystemSettingsCubit,
-                FetchSystemSettingsState>(
-              listener: (context, state) {
-                if (state is FetchCategoryInProgress) {
-                  homeStateListener.setNetworkState(setState, true);
-                  setState(() {});
-                }
-                if (state is FetchSystemSettingsSuccess) {
-                  homeStateListener.setNetworkState(setState, true);
-
-                  setState(() {});
-                  var setting = context
-                      .read<FetchSystemSettingsCubit>()
-                      .getSetting(SystemSetting.subscription);
-                  if (setting.length != 0) {
-                    String packageId = setting[0]['package_id'].toString();
-                    Constant.subscriptionPackageId = packageId;
-                  }
-                }
-              },
-              builder: (context, state) {
-                if (homeScreenState.state == HomeScreenDataState.success) {
-                } else if (homeScreenState.state ==
-                    HomeScreenDataState.nointernet) {
-                  return NoInternet(
-                    onRetry: () {
-                      context.read<SliderCubit>().fetchSlider(context);
-                      context.read<FetchCategoryCubit>().fetchCategories();
-                      context.read<FetchMostViewedPropertiesCubit>().fetch();
-                      context.read<FetchPromotedPropertiesCubit>().fetch();
-                      context.read<FetchHomePropertiesCubit>().fetchProperty();
-                    },
-                  );
-                }
-
-                if (homeScreenState.state == HomeScreenDataState.nodata) {
-                  return Center(
-                    child: NoDataFound(
-                      onTap: () {
-                        context.read<SliderCubit>().fetchSlider(context);
-                        context.read<FetchCategoryCubit>().fetchCategories();
-
-                        context.read<FetchMostViewedPropertiesCubit>().fetch();
-                        context.read<FetchPromotedPropertiesCubit>().fetch();
-                        context
-                            .read<FetchHomePropertiesCubit>()
-                            .fetchProperty();
-                      },
-                    ),
-                  );
-                }
-
-                return SingleChildScrollView(
-                  controller: homeScreenController,
-                  physics: const BouncingScrollPhysics(),
-                  padding: EdgeInsets.symmetric(
-                    vertical: MediaQuery.of(context).padding.top,
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      ///Looping through sections so arrange it
-                      ...List.generate(
-                        AppSettings.sections.length,
-                        (index) {
-                          HomeScreenSections section =
-                              AppSettings.sections[index];
-                          if (section == HomeScreenSections.Search) {
-                            return const HomeSearchField();
-                          } else if (section == HomeScreenSections.Slider) {
-                            return sliderWidget();
-                          } else if (section == HomeScreenSections.Category) {
-                            return categoryWidget();
-                          } else if (section ==
-                              HomeScreenSections.NearbyProperties) {
-                            return buildNearByProperties();
-                          } else if (section ==
-                              HomeScreenSections.FeaturedProperties) {
-                            return featuredProperties(homeScreenState, context);
-                          } else if (section ==
-                              HomeScreenSections.PersonalizedFeed) {
-                            return const PersonalizedPropertyWidget();
-                          } else if (section ==
-                              HomeScreenSections.RecentlyAdded) {
-                            return const RecentPropertiesSectionWidget();
-                          } else if (section ==
-                              HomeScreenSections.MostLikedProperties) {
-                            return mostLikedProperties(
-                                homeScreenState, context);
-                          } else if (section == HomeScreenSections.MostViewed) {
-                            return mostViewedProperties(
-                                homeScreenState, context);
-                          } else if (section ==
-                              HomeScreenSections.PopularCities) {
-                            return Padding(
-                              padding: const EdgeInsets.symmetric(
-                                vertical: 10,
-                              ),
-                              child: Column(
-                                children: [
-                                  const BannerAdWidget(),
-                                  const SizedBox(
-                                    height: 10,
-                                  ),
-                                  popularCityProperties(),
-                                ],
-                              ),
-                            );
-                          } else {
-                            return const SizedBox.shrink();
-                          }
-                        },
-                      ),
-                      const SizedBox(
-                        height: 30,
-                      ),
-                    ],
-                  ),
+                  },
                 );
-              },
-            );
-          }),
-        ),
+              }),
+            )),
       ),
     );
   }

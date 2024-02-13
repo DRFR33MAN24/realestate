@@ -268,6 +268,32 @@ class PropertyRepository {
     return DataOutput(total: response['total'] ?? 0, modelList: modelList);
   }
 
+  Future<DataOutput<PropertyModel>> getOwnerProperties(
+      int owner_email, int currentId,
+      {required int offset}) async {
+    Map<String, dynamic> parameters = {
+      Api.owner_email: owner_email,
+      Api.offset: offset,
+      Api.limit: Constant.loadLimit,
+      "current_user": HiveUtils.getUserId()
+    };
+
+    if (Constant.propertyFilter != null) {
+      parameters.addAll(Constant.propertyFilter!.toMap());
+    }
+
+    Map<String, dynamic> response =
+        await Api.get(url: Api.apiGetProprty, queryParameters: parameters);
+
+    List<PropertyModel> modelList = (response['data'] as List)
+        .map((e) => PropertyModel.fromMap(e))
+        .toList();
+
+    modelList = modelList.where((i) => i.id != currentId).toList();
+
+    return DataOutput(total: response['total'] ?? 0, modelList: modelList);
+  }
+
   ///to get my properties which i had added to sell or rent
   Future<DataOutput<PropertyModel>> fetchMyProperties(
       {required int offset, required String type}) async {

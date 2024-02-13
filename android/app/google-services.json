@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "857724650770-ev0tib0kp4u9omttl03bpmistn6e6e0f.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.watanplatform.wrteam",
+            "certificate_hash": "9abf477f4afd2c5c9363742cfd8d8e5314943f63"
+          }
+        },
+        {
           "client_id": "857724650770-g09cfkd9qg73f2s3ne34cl153opomv5i.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

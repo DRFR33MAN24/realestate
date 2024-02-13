@@ -5,6 +5,7 @@ class AppIcons {
   //
   static const String _basePath = "assets/svg/";
   //** */
+  static String verified = _svgPath("verified");
   static String magic = _svgPath("magic");
   static String bin = _svgPath("bin");
   static String chat = _svgPath("inactive_chat");

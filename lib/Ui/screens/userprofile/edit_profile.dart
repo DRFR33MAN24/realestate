@@ -66,6 +66,7 @@ class UserProfileScreenState extends State<UserProfileScreen> {
   dynamic size;
   dynamic city, _state, country, placeid;
   String? name, email, address;
+  int? isVerified;
   File? fileUserimg;
   bool isNotificationsEnabled = true;
   @override
@@ -75,6 +76,7 @@ class UserProfileScreenState extends State<UserProfileScreen> {
     city = HiveUtils.getCityName();
     _state = HiveUtils.getStateName();
     country = HiveUtils.getCountryName();
+    isVerified = HiveUtils.getUserDetails().isVerified;
     placeid = HiveUtils.getCityPlaceId();
     phoneController.text = _saperateNumber();
     nameController.text = (HiveUtils.getUserDetails().name) ?? "";
@@ -173,6 +175,38 @@ class UserProfileScreenState extends State<UserProfileScreen> {
                             Align(
                               alignment: Alignment.center,
                               child: buildProfilePicture(),
+                            ),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                isVerified == 0
+                                    ? Text(UiUtils.getTranslatedLabel(
+                                        context, "account_not_verified"))
+                                    : Text(UiUtils.getTranslatedLabel(
+                                        context, "account_verified")),
+                                UiUtils.buildButton(context,
+                                    autoWidth: false,
+                                    disabled: isVerified == 1,
+                                    width: 10,
+                                    buttonTitle: UiUtils.getTranslatedLabel(
+                                        context, "verify_account"),
+                                    onPressed: () {
+                                  // Navigator.push(context, MaterialPageRoute(
+                                  //   builder: (context) {
+                                  //     return OwnerProfileScreen(
+                                  //       propertyModel: widget.property!,
+                                  //     );
+                                  //   },
+                                  // ));
+                                })
+                              ],
+                            ),
+                            const SizedBox(
+                              height: 20,
                             ),
                             buildTextField(
                               context,

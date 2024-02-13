@@ -52,8 +52,7 @@ class PropertyHorizontalCard extends StatelessWidget {
         .formatAmount(prefix: true));
 
     if (property.rentduration != "" && property.rentduration != null) {
-      rentPrice =
-          ("$rentPrice / ") + (rentDurationMap[property.rentduration] ?? "");
+      rentPrice = ("$rentPrice");
     }
 
     return BlocProvider(
@@ -223,23 +222,25 @@ class PropertyHorizontalCard extends StatelessWidget {
                                           .toLowerCase() ==
                                       "rent") ...[
                                     Text(
-                                      rentPrice,
+                                      rentPrice +
+                                          "  ${property!.rentduration!.translate(context)}  ",
                                     )
                                         .size(context.font.large)
                                         .color(context.color.tertiaryColor)
                                         .bold(weight: FontWeight.w700),
                                   ] else ...[
-                                    Text(
-                                      property.price!
-                                          .priceFormate(
-                                              disabled:
-                                                  Constant.isNumberWithSuffix ==
-                                                      false)
-                                          .toString()
-                                          .formatAmount(
-                                            prefix: true,
-                                          ),
-                                    )
+                                    Text(property.price!
+                                                .priceFormate(
+                                                    disabled: Constant
+                                                            .isNumberWithSuffix ==
+                                                        false)
+                                                .toString()
+                                                .formatAmount(
+                                                  prefix: true,
+                                                ) +
+                                            "  " +
+                                            "${property!.rentduration!.translate(context)}" +
+                                            "  ")
                                         .size(context.font.large)
                                         .color(context.color.tertiaryColor)
                                         .bold(weight: FontWeight.w700),

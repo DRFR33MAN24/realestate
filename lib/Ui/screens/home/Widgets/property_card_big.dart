@@ -35,8 +35,7 @@ class PropertyCardBig extends StatelessWidget {
         .toString()
         .formatAmount(prefix: true));
     if (property.rentduration != "" && property.rentduration != null) {
-      rentPrice =
-          ("$rentPrice / ") + (rentDurationMap[property.rentduration] ?? "");
+      rentPrice = ("$rentPrice");
     }
 
     return Padding(
@@ -150,7 +149,8 @@ class PropertyCardBig extends StatelessWidget {
                           ),
                           if (property.properyType.toString().toLowerCase() ==
                               "rent") ...[
-                            Text(rentPrice)
+                            Text(rentPrice +
+                                    "  ${property!.rentduration!.translate(context)}  ")
                                 .size(
                                   context.font.large,
                                 )
@@ -162,12 +162,14 @@ class PropertyCardBig extends StatelessWidget {
                                 ),
                           ] else ...[
                             Text(property.price!
-                                    .priceFormate(
-                                      disabled:
-                                          Constant.isNumberWithSuffix == false,
-                                    )
-                                    .toString()
-                                    .formatAmount(prefix: true))
+                                        .priceFormate(
+                                          disabled:
+                                              Constant.isNumberWithSuffix ==
+                                                  false,
+                                        )
+                                        .toString()
+                                        .formatAmount(prefix: true) +
+                                    "  ${property!.rentduration!.translate(context)}  ")
                                 .size(context.font.large)
                                 .color(context.color.tertiaryColor)
                                 .bold(

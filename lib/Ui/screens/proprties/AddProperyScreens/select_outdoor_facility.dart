@@ -431,7 +431,8 @@ class OutdoorFacilityDistanceField extends StatelessWidget {
             suffix: SizedBox(
               width: 5,
               child: Center(
-                  child: const Text("KM").color(context.color.textLightColor)),
+                  child: Text(UiUtils.getTranslatedLabel(context, "KM"))
+                      .color(context.color.textLightColor)),
             ),
           ),
         ),

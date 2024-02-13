@@ -93,6 +93,7 @@ class FetchPropertyReportReasonsListCubit
       // emit(FetchPropertyReportReasonsInProgress());
     } catch (e) {
       log("PROPERTY REPORT REASON $e");
+
       emit(FetchPropertyReportReasonsFailure(e));
     }
   }
